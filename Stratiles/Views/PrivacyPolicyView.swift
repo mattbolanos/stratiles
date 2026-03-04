@@ -30,7 +30,12 @@ struct PrivacyPolicyView: View {
                     )
 
                     policySection("Authentication",
-                        "Strava OAuth tokens are exchanged through a lightweight proxy server. This proxy injects the Strava API credentials and forwards requests to Strava. It does not log, store, or inspect any data passing through it."
+                        "Strava OAuth tokens are exchanged through a lightweight proxy server. This proxy injects the Strava API credentials and forwards requests to Strava. It does not log, store, or inspect any data passing through it.",
+                        bullets: [
+                            "The Strava login page opens in an ephemeral browser session that does not share cookies with Safari or any other app.",
+                            "No cookies from the login page are stored on your device — they are discarded when the session ends.",
+                            "Any cookie consent prompts shown during login come from Strava's website, not Stratiles.",
+                        ]
                     )
 
                     policySection("Tracking & Analytics",
