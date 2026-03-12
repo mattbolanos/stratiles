@@ -38,21 +38,16 @@ struct LoginView: View {
                 Button {
                     Task { await connectWithStrava() }
                 } label: {
-                    Group {
-                        if isLoading {
-                            ProgressView()
-                                .tint(.white)
-                        } else {
-                            Label("Connect with Strava", systemImage: "link")
-                                .fontWeight(.semibold)
-                        }
+                    if isLoading {
+                        ProgressView()
+                            .tint(Theme.stravaOrange)
+                    } else {
+                        Image("ConnectWithStrava")
+                            .resizable()
+                            .aspectRatio(contentMode: .fit)
+                            .frame(height: 48)
                     }
-                    .frame(maxWidth: .infinity)
-                    .frame(height: 24)
                 }
-                .buttonStyle(.borderedProminent)
-                .buttonBorderShape(.roundedRectangle(radius: 14))
-                .controlSize(.large)
                 .disabled(isLoading)
                 .opacity(appeared ? 1 : 0)
 
@@ -166,4 +161,8 @@ enum LoginError: LocalizedError {
             return "Failed to complete sign-in: \(message)"
         }
     }
+}
+
+#Preview {
+    LoginView(onAuthenticated: ({ print("Hello!") }))
 }

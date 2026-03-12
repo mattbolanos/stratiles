@@ -105,10 +105,14 @@ struct SettingsView: View {
                         }
                     }
                 } header: {
-                    VStack(spacing: 4) {
+                    VStack(spacing: 8) {
                         Text("Made with ❤️ by Matt Bolaños")
                             .font(.footnote.weight(.medium))
                             .foregroundStyle(.secondary)
+                        Image("PoweredByStrava")
+                            .resizable()
+                            .aspectRatio(contentMode: .fit)
+                            .frame(height: 24)
                     }
                     .frame(maxWidth: .infinity)
                 }

@@ -10,8 +10,8 @@
 		83E4F0E92F4900C100F9D75D /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 83E4F0E82F4900C100F9D75D /* WidgetKit.framework */; };
 		83E4F0EB2F4900C100F9D75D /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 83E4F0EA2F4900C100F9D75D /* SwiftUI.framework */; };
 		83E4F0FA2F4900C400F9D75D /* StratilesWidgetExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 83E4F0E62F4900C100F9D75D /* StratilesWidgetExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
-		83E4F12A2F49020000F9D75D /* StratilesCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 83E4F1222F49020000F9D75D /* StratilesCore.framework */; platformFilters = (ios, ); };
-		83E4F12B2F49020000F9D75D /* StratilesCore.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 83E4F1222F49020000F9D75D /* StratilesCore.framework */; platformFilters = (ios, ); settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		83E4F12A2F49020000F9D75D /* StratilesCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 83E4F1222F49020000F9D75D /* StratilesCore.framework */; platformFilter = ios; };
+		83E4F12B2F49020000F9D75D /* StratilesCore.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 83E4F1222F49020000F9D75D /* StratilesCore.framework */; platformFilter = ios; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		83E4F1312F49020000F9D75D /* StratilesCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 83E4F1222F49020000F9D75D /* StratilesCore.framework */; };
 /* End PBXBuildFile section */
 
@@ -348,9 +348,7 @@
 		};
 		83E4F1292F49020000F9D75D /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			platformFilters = (
-				ios,
-			);
+			platformFilter = ios;
 			target = 83E4F1212F49020000F9D75D /* StratilesCore */;
 			targetProxy = 83E4F1282F49020000F9D75D /* PBXContainerItemProxy */;
 		};

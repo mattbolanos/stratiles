@@ -65,34 +65,41 @@ struct TopActivitiesCard: View {
     }
 
     private func row(index: Int, activity: PeakActivity) -> some View {
-        HStack(alignment: .center, spacing: 10) {
-            Text("#\(index + 1)")
-                .font(.caption.monospacedDigit().weight(.semibold))
-                .foregroundStyle(.secondary)
-                .frame(width: 26, alignment: .leading)
-
-            Image(systemName: activity.activityType?.category.icon ?? "sportscourt")
-                .font(.body)
-                .foregroundStyle(Theme.stravaOrange)
-                .frame(width: 28)
-
-            VStack(alignment: .leading, spacing: 2) {
-                Text(activity.name)
-                    .font(.subheadline.weight(.semibold))
-                    .lineLimit(1)
-
-                Text(activity.date, format: .dateTime.month(.abbreviated).day().year())
-                    .font(.caption)
+        Link(destination: URL(string: "https://www.strava.com/activities/\(activity.id)")!) {
+            HStack(alignment: .center, spacing: 10) {
+                Text("#\(index + 1)")
+                    .font(.caption.monospacedDigit().weight(.semibold))
                     .foregroundStyle(.secondary)
-            }
+                    .frame(width: 26, alignment: .leading)
 
-            Spacer(minLength: 8)
+                Image(systemName: activity.activityType?.category.icon ?? "sportscourt")
+                    .font(.body)
+                    .foregroundStyle(Theme.stravaOrange)
+                    .frame(width: 28)
 
-            VStack(alignment: .trailing, spacing: 2) {
-                primaryMetric(for: activity)
-                secondaryMetric(for: activity)
+                VStack(alignment: .leading, spacing: 2) {
+                    Text(activity.name)
+                        .font(.subheadline.weight(.semibold))
+                        .lineLimit(1)
+
+                    Text(activity.date, format: .dateTime.month(.abbreviated).day().year())
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                }
+
+                Spacer(minLength: 8)
+
+                VStack(alignment: .trailing, spacing: 2) {
+                    primaryMetric(for: activity)
+                    secondaryMetric(for: activity)
+                }
+
+                Image(systemName: "arrow.up.right")
+                    .font(.caption2)
+                    .foregroundStyle(Theme.stravaOrange)
             }
         }
+        .tint(.primary)
         .padding(.vertical, 6)
         .padding(.horizontal, 8)
         .background(index.isMultiple(of: 2) ? Theme.subtleOrange : Color.clear, in: .rect(cornerRadius: 10, style: .continuous))
