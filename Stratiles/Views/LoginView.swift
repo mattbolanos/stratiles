@@ -38,21 +38,16 @@ struct LoginView: View {
                 Button {
                     Task { await connectWithStrava() }
                 } label: {
-                    Group {
-                        if isLoading {
-                            ProgressView()
-                                .tint(.white)
-                        } else {
-                            Label("Connect with Strava", systemImage: "link")
-                                .fontWeight(.semibold)
-                        }
+                    if isLoading {
+                        ProgressView()
+                            .tint(Theme.stravaOrange)
+                    } else {
+                        Image("ConnectWithStrava")
+                            .resizable()
+                            .aspectRatio(contentMode: .fit)
+                            .frame(height: 48)
                     }
-                    .frame(maxWidth: .infinity)
-                    .frame(height: 24)
                 }
-                .buttonStyle(.borderedProminent)
-                .buttonBorderShape(.roundedRectangle(radius: 14))
-                .controlSize(.large)
                 .disabled(isLoading)
                 .opacity(appeared ? 1 : 0)
 
@@ -91,17 +86,34 @@ struct LoginView: View {
             let authorizeURL = try makeAuthorizeURL(clientID: config.clientID)
             let callbackURL = try await oauth.authenticate(url: authorizeURL, callbackScheme: StravaConfiguration.callbackURLScheme)
 
-            guard let code = URLComponents(url: callbackURL, resolvingAgainstBaseURL: false)?
-                .queryItems?
-                .first(where: { $0.name == "code" })?
-                .value else {
+            let queryItems = URLComponents(url: callbackURL, resolvingAgainstBaseURL: false)?.queryItems
+
+            // Check for OAuth error parameters before looking for the code
+            if let error = queryItems?.first(where: { $0.name == "error" })?.value {
+                let description = queryItems?.first(where: { $0.name == "error_description" })?.value
+                if error == "access_denied" {
+                    throw LoginError.oauthError("Strava authorization was denied. Please try again and grant access to continue.")
+                } else {
+                    throw LoginError.oauthError(description ?? "Strava returned an error: \(error)")
+                }
+            }
+
+            guard let code = queryItems?.first(where: { $0.name == "code" })?.value else {
                 throw LoginError.missingCode
             }
 
-            _ = try await StravaAPIClient.shared.exchangeAuthorizationCode(code)
+            do {
+                _ = try await StravaAPIClient.shared.exchangeAuthorizationCode(code)
+            } catch {
+                throw LoginError.tokenExchangeFailed(error.localizedDescription)
+            }
             onAuthenticated()
         } catch let error as ASWebAuthenticationSessionError where error.code == .canceledLogin {
             // User dismissed the login sheet — not an error.
+        } catch let error as LoginError {
+            await MainActor.run {
+                errorMessage = error.errorDescription
+            }
         } catch {
             await MainActor.run {
                 errorMessage = "Unable to connect to Strava. Please check your internet connection and try again."
@@ -131,7 +143,26 @@ struct LoginView: View {
     }
 }
 
-enum LoginError: Error {
+enum LoginError: LocalizedError {
     case invalidAuthorizeURL
     case missingCode
+    case oauthError(String)
+    case tokenExchangeFailed(String)
+
+    var errorDescription: String? {
+        switch self {
+        case .invalidAuthorizeURL:
+            return "Unable to build Strava authorization URL."
+        case .missingCode:
+            return "Strava did not return an authorization code. Please try again."
+        case .oauthError(let message):
+            return message
+        case .tokenExchangeFailed(let message):
+            return "Failed to complete sign-in: \(message)"
+        }
+    }
+}
+
+#Preview {
+    LoginView(onAuthenticated: ({ print("Hello!") }))
 }
